@@ -1,0 +1,30 @@
+Submission Format:
+
+Each team is required to submit the results via EMAIL to misahub2023@gmail.com with following rules in mind.
+
+
+The email should contain:
+
+• Team name as the SUBJECT LINE.
+• Team member names in the BODY OF THE EMAIL.
+• Contact number in the BODY OF THE EMAIL.
+• A link of the GITHUB Repository (PUBLIC) in the BODY OF THE EMAIL.
+
+
+The GITHUB Repository (PUBLIC) should contain the following:
+• Developed code for training, validation, and testing in .py / .mat etc in readable format with comments.
+• Stored model, associated weights or files (optional).
+• Any utils or assets or config. or checkpoints.
+• README.md
+
+
+The README.md file should be readable and in the following format in the same sequence:
+• A table of the achieved evaluation metrics (Classification: Accuracy, Recall, F1-Score | Detection: Average Precision, Mean-Average Precision, Intersection over Union(IoU)) of the classification and detection of validation dataset.
+• Screenshots/pictures of any 10 best images selected from validation dataset showing its classification and detection (bounding box with confidence level).
+• Screenshots/ pictures of achieved interpretability plot of any 10 best images selected from validation dataset.
+• A table of the achieved evaluation metrics (Classification: Accuracy, Recall, F1-Score | Detection: Average Precision, Mean-Average Precision, Intersection over Union(IOU)) of the testing dataset.
+• Screenshots/pictures of any 10 best images selected from testing dataset showing its classification and detection (bounding box with confidence level).
+• Screenshots/ pictures of achieved interpretability plot of any 10 best images selected from testing dataset.
+
+
+Please note that any GITHUB Repository which requires access will be NOT be considered for evaluation by our team. BOTH README.md file and CODE will be evaluated for the challenge leader board. Participants are requested to document it properly and make it interactive and readable.
