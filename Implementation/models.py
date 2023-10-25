@@ -51,24 +51,24 @@ def create_model1(image_shape):
     return cnn
 
 
-def create_model2(image_shape):
+def create_model2(input_shape):
     """
     Creates a transfer learning model based on MobileNetV2
     Arguments: image_shape -- Image width, height, no. of channels as a set
     Returns: tf.keras.model
     """
     # Import the mobilenet_v2 model architecture
-    base_model = MobileNetV2(input_shape=image_shape,
+    base_model = MobileNetV2(input_shape=(224, 224, 3),
                              include_top=False,
                              alpha=1.0,
-                             weights='imagenet',
-                             pooling='avg')
+                             weights='imagenet')
     # freeze the base model by making it non-trainable
     base_model.trainable = False
 
     # Initiate the model
-    inputs = tf.keras.Input(shape=image_shape)
-    x = preprocess_input(inputs)
+    inputs = tf.keras.Input(shape=input_shape)
+    x = utils.data_augmenter()(inputs)
+    x = preprocess_input(x)
 
     # Add Base Mobilenet_v2 Model
     x = base_model(x, training=False)

@@ -8,6 +8,7 @@ from keras import layers
 from keras.layers import Input, Add, Dense, Activation, ZeroPadding2D, BatchNormalization, Flatten, Conv2D, AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D
 from keras.models import Model, load_model
 from keras.initializers import random_uniform, glorot_uniform, constant, identity
+from keras.layers.experimental.preprocessing import RandomFlip, RandomRotation
 from tensorflow.python.framework.ops import EagerTensor
 
 
@@ -109,6 +110,19 @@ def load_images(image_list):
         images.append(img)
 
     return np.array(images)
+
+
+def data_augmenter():
+    """
+    Create a Sequential model composed of 2 layers
+    Returns:
+    tf.keras.Sequential
+    """
+    data_augmentation = tf.keras.Sequential()
+    data_augmentation.add(RandomFlip("horizontal"))
+    data_augmentation.add(RandomRotation(0.2))
+
+    return data_augmentation
 
 
 def identity_block(X, f, filters, training=True, initializer=random_uniform):
