@@ -122,12 +122,7 @@ def create_resnet50(input_shape, classes):
     X = utils.identity_block(X, 3, [64, 64, 256])
     X = utils.identity_block(X, 3, [64, 64, 256])
 
-    ### START CODE HERE
-
-    # Use the instructions above in order to implement all of the Stages below
-    # Make sure you don't miss adding any required parameter
-
-    ## Stage 3 (≈4 lines)
+    # Stage 3
     # `convolutional_block` with correct values of `f`, `filters` and `s` for this stage
     X = utils.convolutional_block(X, f=3, filters=[128, 128, 512], s=2)
     # the 3 `identity_block` with correct values of `f` and `filters` for this stage
@@ -135,7 +130,7 @@ def create_resnet50(input_shape, classes):
     X = utils.identity_block(X, 3, [128, 128, 512])
     X = utils.identity_block(X, 3, [128, 128, 512])
 
-    # Stage 4 (≈6 lines)
+    # Stage 4
     # add `convolutional_block` with correct values of `f`, `filters` and `s` for this stage
     X = utils.convolutional_block(X, f=3, filters=[256, 256, 1024], s=2)
     # the 5 `identity_block` with correct values of `f` and `filters` for this stage
@@ -145,21 +140,20 @@ def create_resnet50(input_shape, classes):
     X = utils.identity_block(X, 3, [256, 256, 1024])
     X = utils.identity_block(X, 3, [256, 256, 1024])
 
-    # Stage 5 (≈3 lines)
+    # Stage 5
     # add `convolutional_block` with correct values of `f`, `filters` and `s` for this stage
     X = utils.convolutional_block(X, f=3, filters=[512, 512, 2048], s=2)
     # the 2 `identity_block` with correct values of `f` and `filters` for this stage
     X = utils.identity_block(X, 3, [512, 512, 2048])
     X = utils.identity_block(X, 3, [512, 512, 2048])
 
-    # AVGPOOL (≈1 line). Use "X = AveragePooling2D()(X)"
+    # AVGPOOL. Use "X = AveragePooling2D()(X)"
     X = AveragePooling2D((2, 2))(X)
-
-    ### END CODE HERE
 
     # output layer
     X = Flatten()(X)
-    X = Dense(classes, activation='softmax', kernel_initializer=glorot_uniform(seed=0))(X)
+    # X = Dense(classes, activation='softmax', kernel_initializer=glorot_uniform(seed=0))(X)
+    X = Dense(classes, kernel_initializer=glorot_uniform(seed=0))(X)
 
     # Create model
     model = Model(inputs=X_input, outputs=X)

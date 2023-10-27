@@ -2,14 +2,16 @@ import os
 import random
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from keras.applications.resnet_v2 import preprocess_input, decode_predictions
 from keras import layers
-from keras.layers import Input, Add, Dense, Activation, ZeroPadding2D, BatchNormalization, Flatten, Conv2D, AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D
+from keras.layers import (Input, Add, Dense, Activation, ZeroPadding2D, BatchNormalization, Flatten,
+                          Conv2D, AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D)
 from keras.models import Model, load_model
 from keras.initializers import random_uniform, glorot_uniform, constant, identity
 from keras.layers.experimental.preprocessing import RandomFlip, RandomRotation
-from tensorflow.python.framework.ops import EagerTensor
+# from tensorflow.python.framework.ops import EagerTensor
 
 
 def load_data(train_data_path, split_ratio=0.8, random_seed=0, shuffle=True, save=True):
@@ -144,7 +146,7 @@ def identity_block(X, f, filters, training=True, initializer=random_uniform):
     # Retrieve Filters
     F1, F2, F3 = filters
 
-    # Save the input value. You'll need this later to add back to the main path.
+    # Save the input value. We'll need this later to add back to the main path.
     X_shortcut = X
 
     # First component of main path
@@ -152,7 +154,6 @@ def identity_block(X, f, filters, training=True, initializer=random_uniform):
     X = BatchNormalization(axis=3)(X, training=training)  # Default axis
     X = Activation('relu')(X)
 
-    ### START CODE HERE
     ## Second component of main path
     ## Set the padding = 'same'
     X = Conv2D(filters=F2, kernel_size=f, strides=(1, 1), padding='same', kernel_initializer=initializer(seed=0))(X)
@@ -164,7 +165,7 @@ def identity_block(X, f, filters, training=True, initializer=random_uniform):
     X = Conv2D(filters=F3, kernel_size=1, strides=(1, 1), padding='valid', kernel_initializer=initializer(seed=0))(X)
     X = BatchNormalization(axis=3)(X, training=training)
 
-    ## Final step: Add shortcut value to main path, and pass it through a RELU activation (≈2 lines)
+    ## Final step: Add shortcut value to main path, and pass it through a RELU activation
     X = Add()([X_shortcut, X])
     X = Activation('relu')(X)
 
@@ -202,23 +203,19 @@ def convolutional_block(X, f, filters, s=2, training=True, initializer=glorot_un
     X = BatchNormalization(axis=3)(X, training=training)
     X = Activation('relu')(X)
 
-    ### START CODE HERE
-
-    ## Second component of main path (≈3 lines)
+    ## Second component of main path
     X = Conv2D(filters=F2, kernel_size=f, strides=(1, 1), padding='same', kernel_initializer=initializer(seed=0))(X)
     X = BatchNormalization(axis=3)(X, training=training)
     X = Activation('relu')(X)
 
-    ## Third component of main path (≈2 lines)
+    ## Third component of main path
     X = Conv2D(filters=F3, kernel_size=1, strides=(1, 1), padding='valid', kernel_initializer=initializer(seed=0))(X)
     X = BatchNormalization(axis=3)(X, training=training)
 
-    ##### SHORTCUT PATH ##### (≈2 lines)
+    ##### SHORTCUT PATH #####
     X_shortcut = Conv2D(filters=F3, kernel_size=1, strides=(s, s), padding='valid',
                         kernel_initializer=initializer(seed=0))(X_shortcut)
     X_shortcut = BatchNormalization(axis=3)(X_shortcut, training=training)
-
-    ### END CODE HERE
 
     # Final step: Add shortcut value to main path (Use this order [X, X_shortcut]),
     # and pass it through a RELU activation
@@ -226,3 +223,33 @@ def convolutional_block(X, f, filters, s=2, training=True, initializer=glorot_un
     X = Activation('relu')(X)
 
     return X
+
+
+def show_results(history):
+    """
+    Argument: Sequential model fit object
+    Output: Two plots, first showing training and validation accuracy,
+            and second showing training and validation loss
+    """
+    acc = [0.] + history.history['accuracy']
+    val_acc = [0.] + history.history['val_accuracy']
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+
+    plt.figure(figsize=(8, 8))
+    plt.subplot(2, 1, 1)
+    plt.plot(acc, label='Training Accuracy')
+    plt.plot(val_acc, label='Validation Accuracy')
+    plt.legend(loc='lower right')
+    plt.ylabel('Accuracy')
+    plt.ylim([min(plt.ylim()), 1])
+    plt.title('Training and Validation Accuracy')
+    plt.subplot(2, 1, 2)
+    plt.plot(loss, label='Training Loss')
+    plt.plot(val_loss, label='Validation Loss')
+    plt.legend(loc='upper right')
+    plt.ylabel('Cross Entropy')
+    plt.ylim([0, 1.0])
+    plt.title('Training and Validation Loss')
+    plt.xlabel('epoch')
+    plt.show()
