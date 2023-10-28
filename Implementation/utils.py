@@ -129,7 +129,7 @@ def data_augmenter():
 
 def identity_block(X, f, filters, training=True, initializer=random_uniform):
     """
-    Implementation of the identity block as defined in Figure 4
+    Implementation of the identity block
 
     Arguments:
     X -- input tensor of shape (m, n_H_prev, n_W_prev, n_C_prev)
@@ -174,7 +174,7 @@ def identity_block(X, f, filters, training=True, initializer=random_uniform):
 
 def convolutional_block(X, f, filters, s=2, training=True, initializer=glorot_uniform):
     """
-    Implementation of the convolutional block as defined in Figure 4
+    Implementation of the convolutional block
 
     Arguments:
     X -- input tensor of shape (m, n_H_prev, n_W_prev, n_C_prev)
