@@ -1,2 +1,0 @@
-https://misahub.in/CVIP/challenge.html		[website]
-https://zenodo.org/record/7548320#.Y8gkjeBX40F	[train data]
