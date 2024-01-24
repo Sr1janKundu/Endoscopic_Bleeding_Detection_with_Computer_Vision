@@ -1,4 +1,5 @@
 import torch
+import torchvision
 #from torchvision.transforms import v2
 from dataset import BleedDataset
 
@@ -32,6 +33,7 @@ def check_accuracy(loader, model, device="cuda"):
     num_correct = 0
     num_pixels = 0
     dice_score = 0
+    IoU = 0
     model.eval()
 
     with torch.no_grad():
@@ -42,16 +44,25 @@ def check_accuracy(loader, model, device="cuda"):
             preds = (preds > 0.5).float()
             num_correct += (preds == y).sum()
             num_pixels += torch.numel(preds)
-            dice_score += (2 * (preds * y).sum()) / (
-                (preds + y).sum() + 1e-8
-            )
+            dice_score += (2 * (preds * y).sum()) / ((preds + y).sum() + 1e-8)
+            intersection = (preds * y).sum()
+            union = (preds + y).sum() - intersection
+            IoU += (intersection + 1e-8) / (union + 1e-8)
 
-    print(
-        f"\nPredicted {num_correct} pixels correct out of {num_pixels} pixels, with accuracy: {num_correct/num_pixels*100:.2f}%"
-    )
+    print(f"\nPredicted {num_correct} pixels correct out of {num_pixels} pixels, with accuracy: {num_correct/num_pixels*100:.2f}%")
     print(f"Dice score: {dice_score/len(loader)}")
+    print(f"IoU: {IoU / len(loader)}")
     model.train()
 
 
-#def save_predictions_as_imgs():
-#    pass
+#def save_predictions_as_imgs(loader, model, folder, device="cuda"):
+#    model.eval()
+#    for idx, (x, y) in enumerate(loader):
+#        x = x.to(device=device)
+#        with torch.no_grad():
+#            preds = torch.sigmoid(model(x))
+#            preds = (preds > 0.5).float()
+#        torchvision.utils.save_image(preds, f"{folder}/pred_{idx}.png")
+#        torchvision.utils.save_image(y.unsqueeze(1), f"{folder}{idx}.png")
+#
+#    model.train()

@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.optim as optim
 from models import UNET
 from utils import (
-    load_checkpoint,
+    #load_checkpoint,
     save_checkpoint,
     get_loaders,
     check_accuracy,
@@ -18,8 +18,8 @@ from utils import (
 # Hyperparameters etc.
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-NUM_EPOCHS = 25
-LOAD_MODEL = False
+NUM_EPOCHS = 5
+#LOAD_MODEL = False
 data_path = "D:\\Projects\\Endoscopic_Bleeding_Detection_with_Computer_Vision\\TrainData\\"
 
 
@@ -60,14 +60,15 @@ def main():
 
     train_loader, val_loader = get_loaders(data_path)
 
-    if LOAD_MODEL:
-        load_checkpoint(torch.load("my_checkpoint.pth"), model)
+    #if LOAD_MODEL:
+    #    load_checkpoint(torch.load("my_checkpoint.pth"), model)
 
 
-    check_accuracy(val_loader, model, device=DEVICE)
+    #check_accuracy(val_loader, model, device=DEVICE)
     scaler = torch.cuda.amp.GradScaler()
 
     for epoch in range(NUM_EPOCHS):
+        print(f'| Epoch {epoch}:')
         train_fn(train_loader, model, optimizer, loss_fn, scaler)
 
         # save model
@@ -80,12 +81,6 @@ def main():
 
         # check accuracy
         check_accuracy(val_loader, model, device=DEVICE)
-
-        # print some examples to a folder
-        #save_predictions_as_imgs(
-        #    val_loader, model, folder="D:\\Projects\\Endoscopic_Bleeding_Detection_with_Computer_Vision\\saved_images\\", device=DEVICE
-        #)
-
 
 if __name__ == "__main__":
     main()
